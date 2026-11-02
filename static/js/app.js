@@ -240,7 +240,10 @@ async function executePrediction(triggerBtn = null) {
             body: JSON.stringify(payload)
         });
 
-        if (!resp.ok) throw new Error("API inference call failed");
+        if (!resp.ok) {
+            const errData = await resp.json().catch(() => ({}));
+            throw new Error(errData.detail || `Server error (${resp.status})`);
+        }
         const data = await resp.json();
 
         renderResults(data);
@@ -369,7 +372,10 @@ async function handleReportUpload(file) {
             body: formData
         });
 
-        if (!resp.ok) throw new Error("Upload extraction failed");
+        if (!resp.ok) {
+            const errData = await resp.json().catch(() => ({}));
+            throw new Error(errData.detail || `Upload extraction failed (${resp.status})`);
+        }
         const result = await resp.json();
 
         // Populate review drawer

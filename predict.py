@@ -16,6 +16,21 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.config import MODELS_DIR
 
+_MODEL_CACHE: Dict[str, Any] = {}
+
+
+def get_model(model_path: Path = None):
+    """Retrieves cached model or loads it once into memory."""
+    if model_path is None:
+        model_path = MODELS_DIR / "best_cardio_model.joblib"
+
+    path_str = str(model_path)
+    if path_str not in _MODEL_CACHE:
+        if not model_path.exists():
+            raise FileNotFoundError(f"Trained model not found at {model_path}. Run run_pipeline.py first.")
+        _MODEL_CACHE[path_str] = joblib.load(model_path)
+    return _MODEL_CACHE[path_str]
+
 
 def predict_cardio_risk(
     patient: Union[Dict[str, Any], pd.DataFrame],
@@ -25,13 +40,7 @@ def predict_cardio_risk(
     Evaluates patient examination data and returns predicted CVD diagnosis,
     risk probability, and clinical risk stratification.
     """
-    if model_path is None:
-        model_path = MODELS_DIR / "best_cardio_model.joblib"
-
-    if not model_path.exists():
-        raise FileNotFoundError(f"Trained model not found at {model_path}. Run run_pipeline.py first.")
-
-    model = joblib.load(model_path)
+    model = get_model(model_path)
 
     if isinstance(patient, dict):
         df_patient = pd.DataFrame([patient])

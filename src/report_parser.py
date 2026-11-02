@@ -7,7 +7,10 @@ using PyMuPDF (fitz) and Clinical Regular Expression Entity Recognition.
 import re
 from typing import Dict, Any, Optional
 from pathlib import Path
-import fitz  # PyMuPDF
+try:
+    import pymupdf as fitz
+except ImportError:
+    import fitz
 
 
 class MedicalReportParser:
