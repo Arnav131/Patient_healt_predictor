@@ -4,8 +4,8 @@ Configuration Settings for Cardiovascular Disease Predictor Pipeline
 
 from pathlib import Path
 
-# Paths
-BASE_DIR = Path(r"D:\ML_PROJECTS\end_to_end_ml_project\health_care_predictor")
+# Paths (Dynamically resolved relative to this file for cross-platform & cloud compatibility)
+BASE_DIR = Path(__file__).resolve().parent.parent
 DATASET_PATH = BASE_DIR / "MODEL_TRAINING_FILES" / "dataset" / "cardio_train.csv"
 DOCS_DIR = BASE_DIR / "docs"
 FIGURES_DIR = DOCS_DIR / "figures"

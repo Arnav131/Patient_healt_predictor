@@ -47,7 +47,7 @@ class PatientInput(BaseModel):
     active: int = Field(1, ge=0, le=1, description="0: Inactive, 1: Active")
 
 
-@app.get("/", response_class=HTMLResponse)
+@app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
 async def serve_home(request: Request):
     """Renders the main CardioPulse AI web application."""
     return templates.TemplateResponse(request, "index.html")
